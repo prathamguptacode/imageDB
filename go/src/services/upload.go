@@ -42,31 +42,31 @@ func Upload(c fiber.Ctx) error {
 	if errF != nil {
 		return c.Status(500).JSON(fiber.Map{"message": "Something went wrong"})
 	}
+	defer imgFile.Close()
 	img, _, errI := image.Decode(imgFile)
 	if errI != nil {
 		return c.Status(500).JSON(fiber.Map{"message": "Something went wrong"})
 	}
-	imgFile.Close()
 	r := resize.Resize(800, 0, img, resize.Lanczos3)
 	imgW, errw := os.Create("upload/" + safeName + "w_800.jpeg")
 	if errw != nil {
 		return c.Status(500).JSON(fiber.Map{"message": "Something went wrong"})
 	}
+	defer imgW.Close()
 	errOw := jpeg.Encode(imgW, r, nil)
 	if errOw != nil {
 		return c.Status(500).JSON(fiber.Map{"message": "Something went wrong"})
 	}
-	imgW.Close()
 	r2 := resize.Resize(1600, 0, img, resize.Lanczos3)
 	imgW2, errw2 := os.Create("upload/" + safeName + "w_1600.jpeg")
 	if errw2 != nil {
 		return c.Status(500).JSON(fiber.Map{"message": "Something went wrong"})
 	}
+	defer imgW2.Close()
 	errOw2 := jpeg.Encode(imgW2, r2, nil)
 	if errOw2 != nil {
 		return c.Status(500).JSON(fiber.Map{"message": "Something went wrong"})
 	}
-	imgW2.Close()
 
 	return c.JSON(fiber.Map{"message": "File uploaded successfully", "fileName": fileName})
 

@@ -21,7 +21,6 @@ func Retrieve(c fiber.Ctx) error {
 
 	file, errF := os.Open(myFilePath)
 	if errF != nil {
-		file.Close()
 		return c.Status(400).JSON(fiber.Map{"message": "File not found"})
 	}
 	defer file.Close()
@@ -45,7 +44,7 @@ func Retrieve(c fiber.Ctx) error {
 	}
 	wU, errWU := strconv.ParseUint(width, 10, 64)
 	if errWU != nil {
-		return c.Status(500).JSON(fiber.Map{"message": "Something went wrong"})
+		return c.Status(400).JSON(fiber.Map{"message": "invalid width"})
 	}
 
 	ext := filepath.Ext(myFilePath)
