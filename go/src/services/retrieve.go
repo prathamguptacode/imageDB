@@ -10,7 +10,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/HugoSmits86/nativewebp"
 	"github.com/gofiber/fiber/v3"
 	"github.com/nfnt/resize"
 )
@@ -30,6 +29,18 @@ func Retrieve(c fiber.Ctx) error {
 	width := m["width"]
 	if width == "" {
 		return c.SendFile(myFilePath)
+	}
+	if width == "800" {
+		ext := filepath.Ext(myFilePath)
+		fileN := strings.Split(fileReq, ext)
+		fileNameP := "upload/" + fileN[0] + "w_800.jpeg"
+		return c.SendFile(fileNameP)
+	}
+	if width == "1600" {
+		ext := filepath.Ext(myFilePath)
+		fileN := strings.Split(fileReq, ext)
+		fileNameP := "upload/" + fileN[0] + "w_1600.jpeg"
+		return c.SendFile(fileNameP)
 	}
 	wU, errWU := strconv.ParseUint(width, 10, 64)
 	if errWU != nil {
@@ -52,7 +63,7 @@ func Retrieve(c fiber.Ctx) error {
 
 	r := resize.Resize(uint(wU), 0, img, resize.Lanczos3)
 	var buf bytes.Buffer
-	errW := nativewebp.Encode(&buf, r, nil)
+	errW := jpeg.Encode(&buf, r, nil)
 	if errW != nil {
 		return c.Status(500).JSON(fiber.Map{"message": "Something went wrong"})
 	}
