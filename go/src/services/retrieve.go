@@ -67,7 +67,7 @@ func Retrieve(c fiber.Ctx) error {
 	if errW != nil {
 		return c.Status(500).JSON(fiber.Map{"message": "Something went wrong"})
 	}
-	c.Set("Content-Type", "image/webp")
+	c.Set("Content-Type", "image/jpeg")
 	return c.Send(buf.Bytes())
 
 }
