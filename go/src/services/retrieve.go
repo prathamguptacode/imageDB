@@ -21,6 +21,7 @@ func Retrieve(c fiber.Ctx) error {
 
 	file, errF := os.Open(myFilePath)
 	if errF != nil {
+		file.Close()
 		return c.Status(400).JSON(fiber.Map{"message": "File not found"})
 	}
 	defer file.Close()
