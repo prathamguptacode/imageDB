@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"image"
 	"image/jpeg"
-	"image/png"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -47,16 +46,7 @@ func Retrieve(c fiber.Ctx) error {
 		return c.Status(400).JSON(fiber.Map{"message": "invalid width"})
 	}
 
-	ext := filepath.Ext(myFilePath)
-	imgType := strings.Split(ext, ".")[1]
-	var img image.Image
-	var errG error
-	if imgType == "jpg" || imgType == "jpeg" {
-		img, errG = jpeg.Decode(file)
-	}
-	if imgType == "png" {
-		img, errG = png.Decode(file)
-	}
+	img, _, errG := image.Decode(file)
 	if errG != nil {
 		return c.Status(500).JSON(fiber.Map{"message": "Something went wrong"})
 	}
